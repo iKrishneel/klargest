@@ -11,20 +11,27 @@
 #include <iomanip>
 #include <fstream>
 
+#include <klargest/pairs.hpp>
+#include <klargest/contants.hpp>
 
 /**
  * class to helper with parsing of cmd
  */
+
+using MyPair = Pair<std::string, int>;
+using VectorPairs = std::vector<MyPair>;
+
 class ParserHelper {
   
  private:
   std::vector<std::string> inputs;
+  bool split(std::vector<MyPair> &, const std::string, const char = ' ');
   
  public:
   ParserHelper(const int, const char **);
-  bool isValidInput();
-  bool isFileInput();
-  void getInput();
+  bool readDataFromFile(std::vector<MyPair> &, const std::string);
+  void readDataFromCL(std::vector<MyPair> &);
+  void help();
 };
 
 #endif /* PARSER_HELPER_H */
