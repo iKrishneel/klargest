@@ -110,32 +110,7 @@ void help() {
       "\33[0m\n";
 }
 
-void request_data_input() {
-
-}
-
-int main(int argc, const char *argv[]) {
-
-  // input argument is only the file path
-  if (argc > 2) {
-    help();
-    std::exit(EXIT_FAILURE);
-  }
-
-  std::vector<MyPair> pairs;
-  
-  // check that input is file
-  if (argc == 2) {
-    if (!read_from_textfile(pairs, argv[1])) {
-      std::cout << "\033[031mInvalid filepath: "<< argv[1] << " \033[0m\n";
-      help();
-    }
-    for (auto it = pairs.begin(); it != pairs.end(); it++) {
-      std::cout << it->identifier << " " << it->value  << "\n";
-    }
-    return 1;
-  }
-  
+void request_data_input(std::vector<MyPair> &pairs) {
   std::cout << std::string(COUNT, '-') << std::endl;
   std::cout << "Enter input thru console infile the following format\n"
      "\033[032m<unique identifier><white_space><numeric value>"
@@ -167,6 +142,28 @@ int main(int argc, const char *argv[]) {
     }
   }
 
+}
+
+int main(int argc, const char *argv[]) {
+
+  // input argument is only the file path
+  if (argc > 2) {
+    help();
+    std::exit(EXIT_FAILURE);
+  }
+  
+  std::vector<MyPair> pairs;
+  
+  // check that input is file
+  if (argc == 1) {
+    request_data_input(pairs);
+  } else if (argc == 2) {
+    if (!read_from_textfile(pairs, argv[1])) {
+      std::cout << "\033[031mInvalid filepath: "<< argv[1] << " \033[0m\n";
+      help();
+    }
+  }
+  
   // do not proceed if input is empty
   if (pairs.empty()) {
     std::cout << "No input to process\n";
