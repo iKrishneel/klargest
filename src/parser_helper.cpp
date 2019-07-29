@@ -2,14 +2,28 @@
 #include <klargest/parser_helper.hpp>
 
 ParserHelper::ParserHelper(const int argc, const char** argv) {
-  this->pairs.clear();
   
-  // this->inputs.clear();
-  // for (int i = 1; i < argc; ++i) {
-  // inputs.push_back(std::string(argv[i]));
-  // }
+  this->pairs.clear();
+
+  if (argc > 2) {
+    this->help();
+    std::exit(EXIT_FAILURE);
+  }
+  
+  // check that input is file
+  if (argc == 1) {
+    this->readDataFromCL(this->pairs);
+  } else if (argc == 2) {
+    if (!this->readDataFromFile(this->pairs, argv[1])) {
+      std::cout << "\033[031mInvalid filepath: "<< argv[1] << " \033[0m\n";
+      this->help();
+    }
+  }
 }
 
+/**
+   function to read data from the text file
+ */
 bool ParserHelper::readDataFromFile(VectorPairs &pairs,
                                     const std::string filepath) {
   // read file
