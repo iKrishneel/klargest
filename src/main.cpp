@@ -4,6 +4,8 @@
 #include <cstdio>
 #include <cassert>
 #include <sstream>
+#include <iomanip>
+#include <fstream>
 
 /**
  * class to helper with parsing of cmd
@@ -79,32 +81,73 @@ bool split(std::vector<MyPair> &pairs, const std::string input,
   return status;
 }
 
+bool read_from_textfile(std::vector<MyPair> &pairs, const std::string filepath) {
+  // read file
+  std::ifstream infile(filepath.c_str(), std::ios::in);
+
+  // invalid file return false
+  if (!infile.is_open()) {
+    return false;
+  }
+  
+  // Read the next line from File untill it reaches the end.
+  std::string line;
+  while (std::getline(infile, line)) {
+    split(pairs, line);
+  }
+
+  // close the file
+  infile.close();
+  return true;
+}
+
+#define COUNT 80
+
+
+void help() {
+  std::cout << "\033[33mOnly takes file path as input or when input argument "
+      "is not provided user will be prompted to enter the data"
+      "\33[0m\n";
+}
+
+void request_data_input() {
+
+}
+
 int main(int argc, const char *argv[]) {
 
-  // condiiton to check that input is provided
-  if (argc < 2 || argv[argc-1] == NULL) {
-    std::cout << "\033[1;31m Provide the data\33[0m\n";
+  // input argument is only the file path
+  if (argc > 2) {
+    help();
     std::exit(EXIT_FAILURE);
   }
+
+  std::vector<MyPair> pairs;
   
   // check that input is file
   if (argc == 2) {
-    //
+    if (!read_from_textfile(pairs, argv[1])) {
+      std::cout << "\033[031mInvalid filepath: "<< argv[1] << " \033[0m\n";
+      help();
+    }
+    for (auto it = pairs.begin(); it != pairs.end(); it++) {
+      std::cout << it->identifier << " " << it->value  << "\n";
+    }
+    return 1;
   }
-
-  const int COUNT = 80;
   
   std::cout << std::string(COUNT, '-') << std::endl;
-  std::cout << "Enter input thru console in the following format\n"
+  std::cout << "Enter input thru console infile the following format\n"
      "\033[032m<unique identifier><white_space><numeric value>"
      "\033[033m\t [eg: 1426828011 9]\033[0m\n";
   std::cout << "To signal end of input, press c\n";
   std::cout << std::string(COUNT, '-') << std::endl << std::endl;
-    
-  std::vector<MyPair> pairs;
   std::string input;
   int line_count = 1;
   while (true) {
+
+    std::cout << std::setfill(' ') << std::setw(4) << line_count++ << "| ";
+        
     // get the user input
     std::getline(std::cin >> std::ws, input);
     
@@ -112,21 +155,29 @@ int main(int argc, const char *argv[]) {
     if (input == "C" || input == "c") {
       if (!pairs.empty()) {
         std::cout << std::string(COUNT, '-') << std::endl;
-        std::cout << "END OF INPUT\n" << std::string(COUNT, '-') << std::endl;
+        // std::cout << "END OF INPUT\n" << std::string(COUNT, '-') << std::endl;
       }
       break;
     }
 
     // split and pack
     if (!split(pairs, input)) {
+      line_count--;
       std::cout << "\033[033m[WARN]Ignored->Incorrect Format\033[0m\n";
     }
   }
 
+  // do not proceed if input is empty
   if (pairs.empty()) {
     std::cout << "No input to process\n";
     return 0;
   }
+
+  for (auto it = pairs.begin(); it != pairs.end(); it++) {
+    std::cout << it->identifier << " " << it->value  << "\n";
+  }
+
+
   
   /*
   ParserHelper *parser = new ParserHelper(argc, argv);
