@@ -24,14 +24,17 @@ using VectorPairs = std::vector<MyPair>;
 class ParserHelper {
   
  private:
-  std::vector<std::string> inputs;
-  bool split(std::vector<MyPair> &, const std::string, const char = ' ');
+  // std::vector<std::string> inputs;
+  VectorPairs pairs;
+  bool split(VectorPairs &, const std::string, const char = ' ');
   
  public:
   ParserHelper(const int, const char **);
-  bool readDataFromFile(std::vector<MyPair> &, const std::string);
-  void readDataFromCL(std::vector<MyPair> &);
+  bool readDataFromFile(VectorPairs &, std::string);
+  void readDataFromCL(VectorPairs &);
   void help();
+
+  VectorPairs getPairs();
 };
 
 #endif /* PARSER_HELPER_H */

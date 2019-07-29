@@ -2,13 +2,15 @@
 #include <klargest/parser_helper.hpp>
 
 ParserHelper::ParserHelper(const int argc, const char** argv) {
-  this->inputs.clear();
-  for (int i = 1; i < argc; ++i) {
-    inputs.push_back(std::string(argv[i]));
-  }
+  this->pairs.clear();
+  
+  // this->inputs.clear();
+  // for (int i = 1; i < argc; ++i) {
+  // inputs.push_back(std::string(argv[i]));
+  // }
 }
 
-bool ParserHelper::readDataFromFile(std::vector<MyPair> &pairs,
+bool ParserHelper::readDataFromFile(VectorPairs &pairs,
                                     const std::string filepath) {
   // read file
   std::ifstream infile(filepath.c_str(), std::ios::in);
@@ -33,7 +35,7 @@ bool ParserHelper::readDataFromFile(std::vector<MyPair> &pairs,
 /**
  * function to split the input strings 
  */
-bool ParserHelper::split(std::vector<MyPair> &pairs, const std::string input,
+bool ParserHelper::split(VectorPairs &pairs, const std::string input,
                          const char delimiter) {
   std::string token;
   std::istringstream iss(input);
@@ -54,7 +56,7 @@ bool ParserHelper::split(std::vector<MyPair> &pairs, const std::string input,
 /*
   function to read data from command line
  */
-void ParserHelper::readDataFromCL(std::vector<MyPair> &pairs) {
+void ParserHelper::readDataFromCL(VectorPairs &pairs) {
 
   std::cout << std::string(CMD_COUNT, '-') << std::endl;
   std::cout << "Enter input thru console infile the following format\n"
@@ -87,6 +89,10 @@ void ParserHelper::readDataFromCL(std::vector<MyPair> &pairs) {
       std::cout << "\033[033m[WARN]Ignored->Incorrect Format\033[0m\n";
     }
   }
+}
+
+VectorPairs ParserHelper::getPairs() {
+  return this->pairs;
 }
 
 void ParserHelper::help() {
