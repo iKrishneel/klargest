@@ -1,4 +1,5 @@
 
+/*
 #include <iostream>
 #include <vector>
 #include <cstdio>
@@ -6,10 +7,14 @@
 #include <sstream>
 #include <iomanip>
 #include <fstream>
+*/
+
+#include <klargest/parser_helper.hpp>
 
 /**
  * class to helper with parsing of cmd
  */
+/*
 class ParserHelper {
   
  private:
@@ -45,6 +50,9 @@ bool ParserHelper::isFileInput() {
 void ParserHelper::getInput() {
   
 }
+*/
+
+
 
 template<typename T, typename U>
 struct Pair {
