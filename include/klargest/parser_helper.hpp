@@ -17,14 +17,9 @@
 /**
  * class to helper with parsing of cmd
  */
-
-using MyPair = Pair<std::string, int>;
-using VectorPairs = std::vector<MyPair>;
-
 class ParserHelper {
   
  private:
-  // std::vector<std::string> inputs;
   VectorPairs pairs;
 
  protected:

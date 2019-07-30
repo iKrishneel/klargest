@@ -1,3 +1,4 @@
+#pragma once
 #ifndef CONTANTS_H
 #define CONTANTS_H
 

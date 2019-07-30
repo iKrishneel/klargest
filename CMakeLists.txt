@@ -7,5 +7,7 @@ include_directories(include)
 
 add_executable(${CMAKE_PROJECT_NAME}
 	src/main.cpp
-	src/parser_helper.cpp)
+	src/parser_helper.cpp
+	src/klargest.cpp
+	)
 target_link_libraries(${CMAKE_PROJECT_NAME})

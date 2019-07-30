@@ -1,5 +1,6 @@
 
 #include <klargest/parser_helper.hpp>
+#include <KLargest/KLargest.hpp>
 
 int main(int argc, const char *argv[]) {
 
@@ -12,10 +13,16 @@ int main(int argc, const char *argv[]) {
     return 0;
   }
 
+
   for (auto it = pairs.begin(); it != pairs.end(); it++) {
     std::cout << it->identifier << " " << it->value  << "\n";
   }
-
+  std::cout << "\n";
+  
+  KLargest *k_largest = new KLargest(pairs, 2);
+  
+  
   delete parser;
+  delete k_largest;
   return 0;
 }
