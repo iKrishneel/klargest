@@ -29,11 +29,12 @@ class ParserHelper {
   void help();
   bool isFile(const std::string);
   bool isValidK(const std::string);
-  void getKFromCL(const std::string = "");
   
  public:
   ParserHelper(const int, const char **);
   VectorPairs getPairs();
+  int getK();
+  bool getKFromCL(const std::string = "");
 };
 
 #endif /* PARSER_HELPER_H */

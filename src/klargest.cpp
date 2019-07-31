@@ -14,10 +14,17 @@ KLargest::KLargest(const VectorPairs vector_pairs) {
  */
 VectorPairs KLargest::getKLargest(const int k) {
 
+  int v_size = static_cast<int>(this->pairs.size());
+  
   // check that given k is within the range
-  if (k < 1 || k > static_cast<int>(this->pairs.size())) {
+  if (k < 1 || k > v_size) {
     std::cout << "\033[031mInvalid value for k\033[0m"  << "\n";
     return VectorPairs();
+  }
+
+  // case of k = n
+  if (k == v_size) {
+    return this->pairs;
   }
 
   // make a copy

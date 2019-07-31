@@ -21,9 +21,12 @@ ParserHelper::ParserHelper(const int argc, const char** argv) {
     }
 
     // user also provided the value for k
+    /*
     if (argc == 3) {
       this->getKFromCL(argv[2]);
     }
+    */
+    this->getKFromCL(argc == 3 ? argv[2] : "");
   }
 }
 
@@ -45,23 +48,33 @@ bool ParserHelper::isFile(const std::string str) {
 }
 
 bool ParserHelper::isValidK(const std::string str) {
-  std::cout << "Checking..."  << "\n";
   try {
     this->k = std::stoi(str);
+    if (this->k < 1 || this->k > static_cast<int>(this->pairs.size())) {
+      std::string what = "K not in range of the number of elements\n";
+      throw std::invalid_argument(what);
+    }
     return true;
   } catch (std::invalid_argument const &error) {
-    std::cout << "\033[031mEnter valid value for k: k>0\033[0m\n";
+    std::cout << "\033[031m" << error.what() <<
+        "Enter valid value for k: k>0 \033[0m\n";
   }
   return false;
 }
 
-void ParserHelper::getKFromCL(const std::string s) {
+bool ParserHelper::getKFromCL(const std::string s) {
   std::string input = s;
-  while (!this->isValidK(input)) {
-    std::cout << "Enter a value for k: [k > 0]: ";
+  while (input.empty() || !this->isValidK(input)) {
+    std::cout << "Enter a value for k: [0 < k < " <<
+        this->pairs.size() + 1 << "] : ";
     // get the user input
     std::getline(std::cin >> std::ws, input);
+    
+    if (input == "C" || input == "c") {
+      return false;
+    }
   }
+  return true;
 }
 
 /**
@@ -133,8 +146,6 @@ void ParserHelper::readDataFromCL(VectorPairs &pairs) {
     if (input == "C" || input == "c") {
       if (!pairs.empty()) {
         std::cout << std::string(CMD_COUNT, '-') << std::endl;
-        // std::cout << "END OF INPUT\n"
-        //           << std::string(CMD_COUNT, '-') << std::endl;
       }
       break;
     }
@@ -145,10 +156,17 @@ void ParserHelper::readDataFromCL(VectorPairs &pairs) {
       std::cout << "\033[033m[WARN]Ignored->Incorrect Format\033[0m\n";
     }
   }
+
+  // get k
+  this->getKFromCL();
 }
 
 VectorPairs ParserHelper::getPairs() {
   return this->pairs;
+}
+
+int ParserHelper::getK() {
+  return this->k;
 }
 
 void ParserHelper::help() {

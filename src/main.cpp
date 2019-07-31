@@ -16,12 +16,21 @@ int main(int argc, const char *argv[]) {
   for (auto it = pairs.begin(); it != pairs.end(); it++) {
      std::cout << *it;
   }
-  std::cout << "\n";
-  
-  KLargest *k_largest = new KLargest(pairs);
-  VectorPairs k_largest_pairs = k_largest->getKLargest(3);
+  int k = parser->getK();
 
-  k_largest->print(k_largest_pairs);
+  std::cout << "\n";
+  std::cout << "K is: " << k << "\n";
+
+  std::string input;
+  KLargest *k_largest = new KLargest(pairs);
+  VectorPairs k_largest_pairs;
+  
+  do {
+     k_largest_pairs = k_largest->getKLargest(parser->getK());
+     k_largest->print(k_largest_pairs);
+     std::cout << "\n\nEnter K for another test c to end."  << "\n";
+  } while (parser->getKFromCL());
+  
 
   // book keeping
   delete parser;
