@@ -23,7 +23,7 @@ def generate(size, k):
     d_list = []
     with open(filename, 'w') as outfile:
         for i in range(size):
-            idd = random_string(size=10)
+            idd = str(i).zfill(10) # random_string(size=10)
             value = random.randint(0, val_size)
             d_list.append([idd, value])
 
