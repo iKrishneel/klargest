@@ -11,14 +11,18 @@ struct Pair {
     identifier = id;
     value = val;
   }
-
-  std::ostream& operator<<(std::ostream& os) {
-    // os << "Id: " << identifier << " value: " << value << std::endl;
-    return os;
-  }
 };
+
+template<typename T, typename U>
+std::ostream& operator<<(std::ostream& os, const Pair<T, U> &dpair) {
+    os << "Id: " << dpair.identifier << " value: " << dpair.value << std::endl;
+    return os;
+}
+
 
 using MyPair = Pair<std::string, int>;
 using DPair = Pair<std::string, int>;
 using VectorPairs = std::vector<DPair>;
+using VectorInt = std::vector<int>;
+
 #endif /* PAIRS_H */

@@ -1,231 +1,51 @@
 
 #include <klargest/klargest.hpp>
 
-KLargest::KLargest(const VectorPairs vectorPairs, const int k) : k_value(k) {
-  this->pairs = vectorPairs;
-  this->findKLargest();
-}
-
-void KLargest::findKLargest() {
-  int size = this->pairs.size();
-  getKLargest(this->pairs, 0, size-1, this->k_value);
-}
-
-std::vector<int> KLargest::sortIndexes(const std::vector<DPair> &v) {
-  
-  // initialize original index locations
-  std::vector<int> indices(v.size());
-  std::iota(indices.begin(), indices.end(), 0);
-  
-  // sort indexes based on comparing values in v
-  std::sort(indices.begin(), indices.end(),
-            [&v](int i, int j) {
-              return v[i].value < v[j].value;
-            });
-  return indices;
+KLargest::KLargest(const VectorPairs vector_pairs) {
+  this->pairs = vector_pairs;
 }
 
 /*
- * function to sort the vector using comparator function
+ * function to get the k-largest element
+ * the idea is to use Median-of-Medians algorithm to find the k-th
+ * largest element and then loop over the vector to find all elements
+ * in the vector greater then k-th largest
+ * @param k: the kth largest element to search
  */
-DPair KLargest::getMedian(VectorPairs &sub_pairs) {
+VectorPairs KLargest::getKLargest(const int k) {
 
-  /*
-  for (int i = 0; i < sub_pairs.size(); i++) {
-    std::cout << sub_pairs[i].value << " " <<
-        sub_pairs[sorted_indices[i]].value << " " <<
-        sorted_indices[i] << "\n";
+  // check that given k is within the range
+  if (k < 1 || k > this->pairs.size()) {
+    std::cout << "\033[031mInvalid value for k\033[0m"  << "\n";
+    return VectorPairs();
   }
-  std::cout << "\n --- " << sub_pairs.size() << "\n";
-  */
 
-  auto comparator = [](DPair &a, DPair &b ) {
-                      /*
-                      if (a.value < b.value) {
-                        int t = a.index;
-                        a.index = b.index;
-                        b.index = t;
-                        return true;
-                      }
-                      */
-                      return a.value < b.value;
+  // make a copy
+  VectorPairs vector_pairs = this->pairs;
+  auto start = vector_pairs.begin();
+  auto end = vector_pairs.begin() + k;
+
+  // comparator lambda for the custom data type
+  auto comparator = [](DPair &a, DPair &b) {
+                      return a.value > b.value;
                     };
-  std::sort(sub_pairs.begin(), sub_pairs.end(), comparator);
-
-  int mid_point = static_cast<int>(sub_pairs.size() / 2);
-  DPair dp = sub_pairs[mid_point];
-  return dp;
-}
-
-
-DPair KLargest::medianHelper(VectorPairs &vectorPairs, const int left,
-                             const int i, const int j) {
-  int index = left + i * SUB_SIZE;
-  auto start = vectorPairs.begin() + index;
-  auto end = vectorPairs.begin() + index + (j == -1 ? SUB_SIZE : j);
-  auto v_pairs = VectorPairs(start, end);
-  auto median = getMedian(v_pairs);
-  std::copy(v_pairs.begin(), v_pairs.end(), start);
-  return median;
-}
-
-int KLargest::getKLargest(VectorPairs vectorPairs, int left, int right, int k) {
-  // If k is smaller than number of elements in array
   
-  if (k > 0 && k <= right - left + 1) {
-
-    int n = right-left+1;
-
-    std::cout << "\n----------------------\nN: " << n
-              << " " << left << " " << right << " " << k << "\n";
-
-    VectorPairs medians;
-    int i = 0;
-    for (; i < n/5; i++) {
-      auto mid = medianHelper(vectorPairs, left, i);
-      medians.push_back(mid);
-    }
-    
-    if (i*5 < n) {
-      auto mid = medianHelper(vectorPairs, left, i, n%5);
-      medians.push_back(mid);
-      i++;
-    }
-
-    std::cout << "Value: ";
-    for (int i = 0; i < vectorPairs.size(); i++) {
-      std::cout << vectorPairs[i].value << " ";
-    }
-    
-    std::cout << "\nMedians: " << medians.size() << "\n";
-    for (int j = 0; j < medians.size(); j++) {
-      std::cout << medians[j].value << " " << medians[j].identifier << "\n";
-
-    }
-    
-    // Find median of all medians using recursive call.
-    // If median[] has only one element, then no need of recursive call
-    int mom_index = i == 1 ? i-1:
-        getKLargest(medians, 0, i-1, i/2);
-
-    // search with id
-    std::cout << "Vector :";
-    int count = 0;
-    for (auto it = vectorPairs.begin(); it != vectorPairs.end(); it++) {
-      std::cout << it->value << " ";
-      
-      if (it->identifier == medians[mom_index].identifier) {
-        // mom_index = count;
-        break;
-      }
-      count++;
-    }
-    
-
-    std::cout << "\ni: " << i << " " << medians.size() << "\n";
-    std::cout << medians[mom_index].value << "\n";
-    std::cout << "med: "  << mom_index << "\n";
-    
-    // Partition the array around a random element and
-    // get position of pivot_index element in sorted array
-    int position = partition(vectorPairs, left, right,
-                             medians[mom_index].identifier);
-
-    std::cout << "Position:" << position  << "\n";
-    
-    
-    // If position is same as k
-    if (position-left == k-1) {
-      std::cout << "--------->Return: " << position << " "
-                << vectorPairs[position].value  << "\n";
-      // return vectorPairs[position].value;
-      return position;
-    }
-
-    // If position is more, recur for left
-    if (position-left > k-1) {
-      return getKLargest(vectorPairs, left, position-1, k);
-    }
-    
-    // Else recur for right subarray
-    return getKLargest(vectorPairs, position+1, right, k-position+left-1);
-  }
+  // use median-of-medians algorithm to find the k-largest value
+  std::nth_element(start, end, vector_pairs.end(), comparator);
   
-  // If k is more than number of elements in array
-  return INT_MAX;
-}
+  // the kth largest value is at position k-1 since k is between [1-n]
+  DPair kth_largest = vector_pairs.at(k-1);
 
-void swap(VectorPairs &vectorPairs, int a, int b) {
-  std::swap(vectorPairs[a], vectorPairs[b]);
-  /*
-  int temp = vectorPairs[a].index;
-  vectorPairs[a].index = vectorPairs[b].index;
-  vectorPairs[b].index = temp;
-  */
-}
+  std::cout << kth_largest  << "\n";
 
-// It searches for x in vectorPairs[l..r], and partitions the array
-// around x.
-int KLargest::partition(VectorPairs &vectorPairs, const int left,
-                        const int right, const std::string mom_id) {
-
-  int pivot_index;
-  int count = 0;
-  for (auto it = vectorPairs.begin(); it != vectorPairs.end(); it++) {
-    std::cout << it->value << " ";
-    if (it->identifier == mom_id) {
-      pivot_index = count;
-      break;
-    }
-    count++;
-  }
-
-  
-  std::cout << "\n\tPart: " << left << " " << right << " " <<
-      pivot_index << " " << vectorPairs[pivot_index].value << "\n";
-  
-  std::cout << "[in part] Value: ";
-  for (int i = 0; i < vectorPairs.size(); i++) {
-    std::cout << vectorPairs[i].value << " ";
-  }
-
-  /*
-  int count = 0;
-  int pivot_index2;
-  for (auto it = vectorPairs.begin(); it != vectorPairs.end(); it++) {
-    if (it->identifier == medians[pivot_index].identifier) {
-      pivot_index2 = count;
-      break;
-    }
-    count++;
-  }
-  
-  std::cout << "\n\tPart2: " << left << " " << right << " " <<
-  pivot_index << " " << vectorPairs[pivot_index].value << "\n";
-  
-  
-  swap(vectorPairs, pivot_index, right);
-  
-  /*
-  std::cout << "AF: " << vectorPairs[pivot_index].index << " "
-            << vectorPairs[pivot_index].value << " "
-            << vectorPairs[right].index << " "
-            << vectorPairs[right].value << "\n";
-  std::exit(1);
-  */
-  
-  // std::swap(vectorPairs[pivot_index], vectorPairs[right]);
-
-  int i = left;
-  for (int j = left; j <= right-1; j++) {
-    if (vectorPairs[j].value <= vectorPairs[pivot_index].value) {
-      // std::swap(vectorPairs[i++], vectorPairs[j]);
-      swap(vectorPairs, i++, j);
+  // iterate over the array and find all elements greater than
+  // kth_largerst
+  VectorPairs k_largest_pairs;
+  for (auto it = vector_pairs.begin(); it != vector_pairs.end(); it++) {
+    if (it->value >= kth_largest.value) {
+      k_largest_pairs.push_back(*it);
     }
   }
-
-  // std::swap(vectorPairs[i], vectorPairs[right]);
-  swap(vectorPairs, i, right);
-  std::cout << "I: " << i  << "\n";
-  return i;
+  return k_largest_pairs;
 }
+
