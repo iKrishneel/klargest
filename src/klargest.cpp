@@ -40,12 +40,14 @@ DPair KLargest::getMedian(VectorPairs &sub_pairs) {
   */
 
   auto comparator = [](DPair &a, DPair &b ) {
+                      /*
                       if (a.value < b.value) {
                         int t = a.index;
                         a.index = b.index;
                         b.index = t;
                         return true;
                       }
+                      */
                       return a.value < b.value;
                     };
   std::sort(sub_pairs.begin(), sub_pairs.end(), comparator);
@@ -67,8 +69,6 @@ DPair KLargest::medianHelper(VectorPairs &vectorPairs, const int left,
   return median;
 }
 
-// Returns k'th smallest element in vectorPairs[left..right] in worst case
-// linear time. ASSUMPTION: ALL ELEMENTS IN ARR[] ARE DISTINCT
 int KLargest::getKLargest(VectorPairs vectorPairs, int left, int right, int k) {
   // If k is smaller than number of elements in array
   
@@ -92,20 +92,16 @@ int KLargest::getKLargest(VectorPairs vectorPairs, int left, int right, int k) {
       i++;
     }
 
-    std::cout << "Value"  << "\n";
+    std::cout << "Value: ";
     for (int i = 0; i < vectorPairs.size(); i++) {
-      std::cout << vectorPairs[i].value << " " << vectorPairs[i].index  << "\n";
+      std::cout << vectorPairs[i].value << " ";
     }
     
-
-    
-    std::cout << "\nMedians: \n";
+    std::cout << "\nMedians: " << medians.size() << "\n";
     for (int j = 0; j < medians.size(); j++) {
-      std::cout << medians[j].value << " " << medians[j].index << "\n";
+      std::cout << medians[j].value << " " << medians[j].identifier << "\n";
 
     }
-    
-    std::cout << "i: " << i << " " << medians.size() << "\n";
     
     // Find median of all medians using recursive call.
     // If median[] has only one element, then no need of recursive call
@@ -113,29 +109,35 @@ int KLargest::getKLargest(VectorPairs vectorPairs, int left, int right, int k) {
         getKLargest(medians, 0, i-1, i/2);
 
     // search with id
+    std::cout << "Vector :";
     int count = 0;
     for (auto it = vectorPairs.begin(); it != vectorPairs.end(); it++) {
-      if (it->index == medians[mom_index].index) {
-        mom_index = count;
+      std::cout << it->value << " ";
+      
+      if (it->identifier == medians[mom_index].identifier) {
+        // mom_index = count;
         break;
       }
       count++;
     }
+    
 
-
-    std::cout << "i: " << i << " " << medians.size() << "\n";
+    std::cout << "\ni: " << i << " " << medians.size() << "\n";
     std::cout << medians[mom_index].value << "\n";
     std::cout << "med: "  << mom_index << "\n";
     
     // Partition the array around a random element and
     // get position of pivot_index element in sorted array
-    int position = partition(vectorPairs, left, right, mom_index);
+    int position = partition(vectorPairs, left, right,
+                             medians[mom_index].identifier);
 
     std::cout << "Position:" << position  << "\n";
     
     
     // If position is same as k
     if (position-left == k-1) {
+      std::cout << "--------->Return: " << position << " "
+                << vectorPairs[position].value  << "\n";
       // return vectorPairs[position].value;
       return position;
     }
@@ -155,29 +157,51 @@ int KLargest::getKLargest(VectorPairs vectorPairs, int left, int right, int k) {
 
 void swap(VectorPairs &vectorPairs, int a, int b) {
   std::swap(vectorPairs[a], vectorPairs[b]);
+  /*
   int temp = vectorPairs[a].index;
   vectorPairs[a].index = vectorPairs[b].index;
   vectorPairs[b].index = temp;
+  */
 }
 
 // It searches for x in vectorPairs[l..r], and partitions the array
 // around x.
 int KLargest::partition(VectorPairs &vectorPairs, const int left,
-                        const int right, const int pivot_index) {
-  // Search for x in vectorPairs[l..r] and move it to end
-  /*
-  int i;
-  for (i=left; i < right; i++) {
-    if (vectorPairs[i].value == pivot_index) {
+                        const int right, const std::string mom_id) {
+
+  int pivot_index;
+  int count = 0;
+  for (auto it = vectorPairs.begin(); it != vectorPairs.end(); it++) {
+    std::cout << it->value << " ";
+    if (it->identifier == mom_id) {
+      pivot_index = count;
       break;
     }
+    count++;
   }
-  */
 
-  std::cout << vectorPairs.size();
   
   std::cout << "\n\tPart: " << left << " " << right << " " <<
       pivot_index << " " << vectorPairs[pivot_index].value << "\n";
+  
+  std::cout << "[in part] Value: ";
+  for (int i = 0; i < vectorPairs.size(); i++) {
+    std::cout << vectorPairs[i].value << " ";
+  }
+
+  /*
+  int count = 0;
+  int pivot_index2;
+  for (auto it = vectorPairs.begin(); it != vectorPairs.end(); it++) {
+    if (it->identifier == medians[pivot_index].identifier) {
+      pivot_index2 = count;
+      break;
+    }
+    count++;
+  }
+  
+  std::cout << "\n\tPart2: " << left << " " << right << " " <<
+  pivot_index << " " << vectorPairs[pivot_index].value << "\n";
   
   
   swap(vectorPairs, pivot_index, right);
@@ -193,8 +217,8 @@ int KLargest::partition(VectorPairs &vectorPairs, const int left,
   // std::swap(vectorPairs[pivot_index], vectorPairs[right]);
 
   int i = left;
-  for (int j = left; j < right; j++) {
-    if (vectorPairs[j].value < vectorPairs[pivot_index].value) {
+  for (int j = left; j <= right-1; j++) {
+    if (vectorPairs[j].value <= vectorPairs[pivot_index].value) {
       // std::swap(vectorPairs[i++], vectorPairs[j]);
       swap(vectorPairs, i++, j);
     }

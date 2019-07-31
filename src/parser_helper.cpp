@@ -61,8 +61,7 @@ bool ParserHelper::split(VectorPairs &pairs, const std::string input,
   // check that input is valid
   bool status = false;
   if (tokens.size() == 2) {
-    pairs.push_back(MyPair(tokens.at(0), std::stoi(tokens.at(1)),
-                           pairs.size()));
+     pairs.push_back(MyPair(tokens.at(0), std::stoi(tokens.at(1))));
     status = true;
   }
   return status;

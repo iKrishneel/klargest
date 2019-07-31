@@ -6,12 +6,10 @@ template<typename T, typename U>
 struct Pair {
   T identifier;
   U value;
-  int index;
   
-  Pair(T id, U val, int idx=-1) {
+  Pair(T id, U val) {
     identifier = id;
     value = val;
-    index = idx;
   }
 
   std::ostream& operator<<(std::ostream& os) {

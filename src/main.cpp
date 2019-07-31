@@ -16,7 +16,7 @@ int main(int argc, const char *argv[]) {
 
   for (auto it = pairs.begin(); it != pairs.end(); it++) {
     std::cout << it->identifier << " " << it->value
-              << " " << it->index << "\n";
+              << "\n";
   }
   std::cout << "\n";
   

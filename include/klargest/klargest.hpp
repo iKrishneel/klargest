@@ -42,7 +42,7 @@ class KLargest {
   int getKLargest(VectorPairs, int, int, int);
 
   void findKLargest();
-  int partition(VectorPairs &, const int, const int, const int);
+  int partition(VectorPairs &, const int, const int, const std::string);
   
 };
 
