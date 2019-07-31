@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <utility>
 #include <numeric>
+#include <iterator>
 
 #include <klargest/contants.hpp>
 #include <klargest/parser_helper.hpp>
@@ -32,9 +33,10 @@ class KLargest {
   int k_value;
 
  protected:
-  IndexMap getMedian(VectorPairs, const int);
+  DPair getMedian(VectorPairs &);
+  DPair medianHelper(VectorPairs &, const int, const int, const int = -1);
   std::vector<int> sortIndexes(const std::vector<DPair> &v);
-  
+   
  public:
   KLargest(const VectorPairs, const int);
   int getKLargest(VectorPairs, int, int, int);

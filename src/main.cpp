@@ -15,11 +15,12 @@ int main(int argc, const char *argv[]) {
 
 
   for (auto it = pairs.begin(); it != pairs.end(); it++) {
-    std::cout << it->identifier << " " << it->value  << "\n";
+    std::cout << it->identifier << " " << it->value
+              << " " << it->index << "\n";
   }
   std::cout << "\n";
   
-  KLargest *k_largest = new KLargest(pairs, 2);
+  KLargest *k_largest = new KLargest(pairs, 3);
   
   
   delete parser;

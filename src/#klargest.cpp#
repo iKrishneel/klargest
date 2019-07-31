@@ -67,8 +67,6 @@ DPair KLargest::medianHelper(VectorPairs &vectorPairs, const int left,
   return median;
 }
 
-// Returns k'th smallest element in vectorPairs[left..right] in worst case
-// linear time. ASSUMPTION: ALL ELEMENTS IN ARR[] ARE DISTINCT
 int KLargest::getKLargest(VectorPairs vectorPairs, int left, int right, int k) {
   // If k is smaller than number of elements in array
   

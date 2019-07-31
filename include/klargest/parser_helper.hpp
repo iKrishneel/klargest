@@ -15,7 +15,7 @@
 #include <klargest/contants.hpp>
 
 /**
- * class to helper with parsing of cmd
+* class to helper with parsing of cmd
  */
 class ParserHelper {
   
