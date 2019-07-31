@@ -16,16 +16,11 @@ class KLargest {
 
  private:
   VectorPairs pairs;
-  int k_value;
-
- protected:
-  
    
  public:
   KLargest(const VectorPairs);
-  VectorPairs getKLargest(const int k);
-    
+  VectorPairs getKLargest(const int);
+  void print(const VectorPairs);  
 };
-
 
 #endif /* KLARGEST_H */

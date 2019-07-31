@@ -20,7 +20,7 @@ std::ostream& operator<<(std::ostream& os, const Pair<T, U> &dpair) {
 }
 
 
-using MyPair = Pair<std::string, int>;
+// using MyPair = Pair<std::string, int>;
 using DPair = Pair<std::string, int>;
 using VectorPairs = std::vector<DPair>;
 using VectorInt = std::vector<int>;

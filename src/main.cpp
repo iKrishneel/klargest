@@ -1,6 +1,6 @@
 
 #include <klargest/parser_helper.hpp>
-#include <KLargest/KLargest.hpp>
+#include <klargest/klargest.hpp>
 
 int main(int argc, const char *argv[]) {
 
@@ -10,20 +10,21 @@ int main(int argc, const char *argv[]) {
   // do not proceed if input is empty
   if (pairs.empty()) {
     std::cout << "No input to process\n";
-    return 0;
+    return EXIT_SUCCESS;
   }
-
+  
   for (auto it = pairs.begin(); it != pairs.end(); it++) {
      std::cout << *it;
   }
   std::cout << "\n";
   
   KLargest *k_largest = new KLargest(pairs);
-  k_largest->getKLargest(3);
-  
-  std::cout << "DONE"  << "\n";
-  
+  VectorPairs k_largest_pairs = k_largest->getKLargest(3);
+
+  k_largest->print(k_largest_pairs);
+
+  // book keeping
   delete parser;
   delete k_largest;
-  return 0;
+  return EXIT_SUCCESS;
 }

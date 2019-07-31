@@ -15,7 +15,7 @@ KLargest::KLargest(const VectorPairs vector_pairs) {
 VectorPairs KLargest::getKLargest(const int k) {
 
   // check that given k is within the range
-  if (k < 1 || k > this->pairs.size()) {
+  if (k < 1 || k > static_cast<int>(this->pairs.size())) {
     std::cout << "\033[031mInvalid value for k\033[0m"  << "\n";
     return VectorPairs();
   }
@@ -36,8 +36,6 @@ VectorPairs KLargest::getKLargest(const int k) {
   // the kth largest value is at position k-1 since k is between [1-n]
   DPair kth_largest = vector_pairs.at(k-1);
 
-  std::cout << kth_largest  << "\n";
-
   // iterate over the array and find all elements greater than
   // kth_largerst
   VectorPairs k_largest_pairs;
@@ -49,3 +47,11 @@ VectorPairs KLargest::getKLargest(const int k) {
   return k_largest_pairs;
 }
 
+/*
+ * printer function
+ */
+void KLargest::print(const VectorPairs vector_pairs) {
+  for (auto it = vector_pairs.begin(); it != vector_pairs.end(); it++) {
+    std::cout <<*it;
+  }
+}
