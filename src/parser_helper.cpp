@@ -5,7 +5,7 @@ ParserHelper::ParserHelper(const int argc, const char** argv) {
   
   this->pairs.clear();
 
-  if (argc > 2) {
+  if (argc > 3) {
     this->help();
     std::exit(EXIT_FAILURE);
   }
@@ -13,11 +13,54 @@ ParserHelper::ParserHelper(const int argc, const char** argv) {
   // check that input is file
   if (argc == 1) {
     this->readDataFromCL(this->pairs);
-  } else if (argc == 2) {
-    if (!this->readDataFromFile(this->pairs, argv[1])) {
-      std::cout << "\033[031mInvalid filepath: "<< argv[1] << " \033[0m\n";
-      this->help();
+  } else if (argc > 1) {
+    // check that input is a file with valid extension
+    if (isFile(argv[1])) {
+      // load the file
+      readDataFromFile(this->pairs, argv[1]);
     }
+
+    // user also provided the value for k
+    if (argc == 3) {
+      this->getKFromCL(argv[2]);
+    }
+  }
+}
+
+bool ParserHelper::isFile(const std::string str) {
+  std::string file_ext = "txt";
+  try {
+    if (str.substr(str.find_last_of(".")) == file_ext ||
+        str.substr(str.find_last_of(".") + 1) == file_ext) {
+      return true;
+    }
+    throw std::invalid_argument("invalid file extension");
+  } catch (std::out_of_range const &error) {
+    this->help();
+  } catch (std::invalid_argument const &error) {
+    std::cout << "\033[031m" << error.what()  << "\033[0m\n";
+    this->help();
+  }
+    return false;
+}
+
+bool ParserHelper::isValidK(const std::string str) {
+  std::cout << "Checking..."  << "\n";
+  try {
+    this->k = std::stoi(str);
+    return true;
+  } catch (std::invalid_argument const &error) {
+    std::cout << "\033[031mEnter valid value for k: k>0\033[0m\n";
+  }
+  return false;
+}
+
+void ParserHelper::getKFromCL(const std::string s) {
+  std::string input = s;
+  while (!this->isValidK(input)) {
+    std::cout << "Enter a value for k: [k > 0]: ";
+    // get the user input
+    std::getline(std::cin >> std::ws, input);
   }
 }
 
@@ -44,7 +87,6 @@ bool ParserHelper::readDataFromFile(VectorPairs &pairs,
   infile.close();
   return true;
 }
-
 
 /**
  * function to split the input strings 

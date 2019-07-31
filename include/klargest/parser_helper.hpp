@@ -21,12 +21,15 @@ class ParserHelper {
   
  private:
   VectorPairs pairs;
-
+  int k;
  protected:
   bool split(VectorPairs &, const std::string, const char = ' ');
   bool readDataFromFile(VectorPairs &, std::string);
   void readDataFromCL(VectorPairs &);
   void help();
+  bool isFile(const std::string);
+  bool isValidK(const std::string);
+  void getKFromCL(const std::string = "");
   
  public:
   ParserHelper(const int, const char **);
