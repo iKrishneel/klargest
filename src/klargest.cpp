@@ -2,7 +2,7 @@
 #include <klargest/klargest.hpp>
 
 KLargest::KLargest(const VectorPairs vector_pairs) {
-  this->pairs = vector_pairs;
+  this->pairs_ = vector_pairs;
 }
 
 /*
@@ -14,7 +14,7 @@ KLargest::KLargest(const VectorPairs vector_pairs) {
  */
 VectorPairs KLargest::getKLargest(const int k) {
 
-  int v_size = static_cast<int>(this->pairs.size());
+  int v_size = static_cast<int>(this->pairs_.size());
   
   // check that given k is within the range
   if (k < 1 || k > v_size) {
@@ -24,33 +24,61 @@ VectorPairs KLargest::getKLargest(const int k) {
 
   // case of k = n
   if (k == v_size) {
-    return this->pairs;
+    return this->pairs_;
   }
 
+  // return getKLargestMHeap(k);
+  return getKLargestMoMedians(k);
+}
+
+VectorPairs KLargest::getKLargestMoMedians(const int k) {
   // make a copy
-  VectorPairs vector_pairs = this->pairs;
+  auto vector_pairs = this->pairs_;
   auto start = vector_pairs.begin();
-  auto end = vector_pairs.begin() + k;
+  auto end = vector_pairs.begin() + k-1;
 
   // comparator lambda for the custom data type
-  auto comparator = [](DPair &a, DPair &b) {
+  auto comparator = [](const DPair &a, const DPair &b) {
                       return a.value > b.value;
                     };
   
   // use median-of-medians algorithm to find the k-largest value
   std::nth_element(start, end, vector_pairs.end(), comparator);
   
-  // the kth largest value is at position k-1 since k is between [1-n]
-  DPair kth_largest = vector_pairs.at(k-1);
+  // the kth largest value is at position k
+  auto kth_largest = vector_pairs.at(k);
+  std::cout << "k-th: "<< kth_largest << "\n";
 
   // iterate over the array and find all elements greater than
   // kth_largerst
   VectorPairs k_largest_pairs;
   for (auto it = vector_pairs.begin(); it != vector_pairs.end(); it++) {
-    if (it->value >= kth_largest.value) {
+    if (it->value > kth_largest.value) {
       k_largest_pairs.push_back(*it);
     }
   }
+  return k_largest_pairs;
+}
+
+VectorPairs KLargest::getKLargestMHeap(const int k) {
+  
+  // comparator lambda for the custom data type
+  auto comparator = [](const DPair &a, const DPair &b) {
+                      return a.value < b.value;
+                    };
+  
+  // create priority queue in O(n)
+  std::priority_queue<DPair, VectorPairs, decltype(comparator)> p_queue(
+      comparator, this->pairs_);
+
+  // top is the max-value
+  VectorPairs k_largest_pairs;
+  int temp_k = k;
+  while (temp_k-- > 0) {
+    k_largest_pairs.push_back(p_queue.top());
+    p_queue.pop();
+  }
+  
   return k_largest_pairs;
 }
 
