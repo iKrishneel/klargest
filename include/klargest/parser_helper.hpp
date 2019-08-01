@@ -1,3 +1,4 @@
+// Copyright (C) 2019 by Krishneel
 
 #pragma once
 #ifndef PARSER_HELPER_H
@@ -20,8 +21,8 @@
 class ParserHelper {
   
  private:
-  VectorPairs pairs;
-  int k;
+  VectorPairs pairs_;
+  int k_;
  protected:
   bool split(VectorPairs &, const std::string, const char = ' ');
   bool readDataFromFile(VectorPairs &, std::string);

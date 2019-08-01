@@ -1,3 +1,4 @@
+// Copyright (C) 2019 by Krishneel
 
 #include <klargest/klargest.hpp>
 
@@ -6,14 +7,12 @@ KLargest::KLargest(const VectorPairs vector_pairs) {
 }
 
 /*
- * function to get the k-largest element
- * the idea is to use Median-of-Medians algorithm to find the k-th
- * largest element and then loop over the vector to find all elements
- * in the vector greater then k-th largest
- * @param k: the kth largest element to search
- */
+ * wrapper function to that is invoked with k.
+ * the function checks that k is in range and other special conditions
+ * that can exit
+ */  
 VectorPairs KLargest::getKLargest(const int k) {
-
+  // size of data pairs
   int v_size = static_cast<int>(this->pairs_.size());
   
   // check that given k is within the range
@@ -31,6 +30,13 @@ VectorPairs KLargest::getKLargest(const int k) {
   return getKLargestMoMedians(k);
 }
 
+/*
+ * function to get the k-largest element
+ * the idea is to use Median-of-Medians algorithm to find the k-th
+ * largest element and then loop over the vector to find all elements
+ * in the vector greater then k-th largest
+ * @param k: the kth largest element to search
+ */
 VectorPairs KLargest::getKLargestMoMedians(const int k) {
   // make a copy
   auto vector_pairs = this->pairs_;
@@ -47,19 +53,31 @@ VectorPairs KLargest::getKLargestMoMedians(const int k) {
   
   // the kth largest value is at position k
   auto kth_largest = vector_pairs.at(k);
-  std::cout << "k-th: "<< kth_largest << "\n";
 
   // iterate over the array and find all elements greater than
   // kth_largerst
   VectorPairs k_largest_pairs;
   for (auto it = vector_pairs.begin(); it != vector_pairs.end(); it++) {
-    if (it->value > kth_largest.value) {
+    if (it->value >= kth_largest.value) {
       k_largest_pairs.push_back(*it);
+    }
+
+    // only pack k results.
+    // when multiple values are same it will result in packing
+    // all into the vector
+    if (static_cast<int>(k_largest_pairs.size()) == k) {
+      break;
     }
   }
   return k_largest_pairs;
 }
 
+/*
+ * function to find the k-largest using max-heap implemented using the
+ * std::priority_queue. Once the heap is created, the top-k values are
+ * popped from the top of the structure in (klogn).
+ * [for comparision only]
+ */
 VectorPairs KLargest::getKLargestMHeap(const int k) {
   
   // comparator lambda for the custom data type
@@ -71,7 +89,7 @@ VectorPairs KLargest::getKLargestMHeap(const int k) {
   std::priority_queue<DPair, VectorPairs, decltype(comparator)> p_queue(
       comparator, this->pairs_);
 
-  // top is the max-value
+  // pop the top-k elements from the queue
   VectorPairs k_largest_pairs;
   int temp_k = k;
   while (temp_k-- > 0) {
@@ -87,6 +105,6 @@ VectorPairs KLargest::getKLargestMHeap(const int k) {
  */
 void KLargest::print(const VectorPairs vector_pairs) {
   for (auto it = vector_pairs.begin(); it != vector_pairs.end(); it++) {
-    std::cout <<*it;
+    std::cout <<it->identifier << "\n";
   }
 }

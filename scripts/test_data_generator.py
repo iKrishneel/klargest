@@ -11,11 +11,11 @@ test_dir_ = None
 def random_string(size=10, chars=string.digits):
     return ''.join(random.choice(chars) for _ in range(size))
 
-def generate(size, k):
+def generate(size):
     val_size = random.randint(2, 1e6)
     
     filename = 'test_' + str(size).zfill(8) + '.txt'
-    result_fn = filename[:-4] + '_actual_k' + str(k) + '.txt'
+    result_fn = filename[:-4] + '_actual.txt'
 
     filename = os.path.join(test_dir_, filename)
     result_fn = os.path.join(test_dir_, result_fn)
@@ -23,8 +23,8 @@ def generate(size, k):
     d_list = []
     with open(filename, 'w') as outfile:
         for i in range(size):
-            idd = str(i).zfill(10) # random_string(size=10)
-            value = random.randint(0, val_size)
+            idd = str(i).zfill(12) # random_string(size=10)
+            value = random.randint(-val_size, val_size)
             d_list.append([idd, value])
 
             outfile.write('{} {}\n'.format(idd, value))
@@ -32,7 +32,7 @@ def generate(size, k):
 
     # get the result    
     # sort and get top k result
-    d_list = sorted(d_list, key=lambda x: x[1], reverse=True)[:k]
+    d_list = sorted(d_list, key=lambda x: x[1], reverse=True)
 
     # write the results
     with open(result_fn, 'w') as outfile:
@@ -54,8 +54,7 @@ def main(argv):
             os.mkdir(test_dir_)
         
         gen_size = int(argv[1])
-        k = int(argv[2])
-        generate(gen_size, k)
+        generate(gen_size)
     except (IndexError, ValueError):
         print ('Enter the size of data to be generate and k: eg. 5 2')
 

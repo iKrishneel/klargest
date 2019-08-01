@@ -1,3 +1,4 @@
+// Copyright (C) 2019 by Krishneel
 
 #pragma once
 #ifndef KLARGEST_H

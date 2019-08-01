@@ -10,49 +10,49 @@ def read_textfile(filename):
     return [line.rstrip('\n').split(' ') for line in open(filename)]
 
 def compare(result_fn, actual_fn):
+    print ('Loading actual results into memory. Please wait a moment...')
+    
     result = read_textfile(result_fn)
     actual = read_textfile(actual_fn)
 
     # sort files by identifier
     sort = lambda x: sorted(x, key = lambda x: x[0], reverse=True)
-    # result_s = sorted(result, key = lambda x: x[0], reverse=True)
-    # actual_s = sorted(actual, key = lambda x: x[0], reverse=True)
-    actual_s = sort(actual)
-    result_s = sort(result)
+    # actual_s = sort(actual)
+    # result_s = sort(result)
+
+    # create dict for actual
+    actual_s = {}
+    for i, v in actual:
+        actual_s[i] = v
 
     # compare
+    # since the result of the algorithm is not sorted, an if all values are same
+    # then there is a chance that value with different id is selected.
+    # in this for-loop check that value is same
     is_same = True
-    for i, (r, a) in enumerate(zip(result_s, actual_s)):
-        if not (r[0] == a[0] and r[1] == a[1]):
-            print ("Not Same: {}".format([i, a, r]))
-
+    for i, (idd, value) in enumerate(result):
+        if actual_s[idd] != value:
+            print ("Not Same for ID: {} Excepted Value {} Got: {}".format(idd, actual_s[idd], value))
             is_same = False
+            
     if is_same:
         print ("Files compared and both matches")
     
 def main(argv):
     try:
-        test_fn = argv[1]
-        assert os.path.isfile(test_fn), 'Invalid file path'
-
-        splited = test_fn.split(os.sep)
-        name = splited[-1].split('_')[-2]
-
-        result_fn = None
-        actual_fn = None
-        if name == actual_filename:
-            actual_fn = test_fn
-            result_fn = test_fn.replace(actual_filename, result_filename)
-        elif name == result_filename:
-            actual_fn = test_fn.replace(result_filename, actual_filename)
-            result_fn = test_fn
-
-        if result_fn is None or actual_fn is None:
-            print ('Invalid test file')
-            return
+        result_fn = argv[1]
+        assert os.path.isfile(result_fn), 'Invalid file path'
         
+        # get the actual sorted result filename
+        name = result_fn.split(os.sep)[-1].split('_')[0:2]
+        actual_fn = ''
+        for n in name:
+            actual_fn += (n + '_')
+
+        fname = result_fn.split(os.sep)[0]
+        actual_fn = os.path.join(fname, actual_fn + (actual_filename + '.txt'))
+        assert os.path.isfile(actual_fn), 'Actual result file name {} not found'.format(actual_fn)
         assert os.path.isfile(result_fn), 'File name {} not found'.format(result_fn)
-        assert os.path.isfile(actual_fn), 'File name {} not found'.format(actual_fn)
 
         print ('Comparing: \nActual: {} \nResult: {}'.format(actual_fn, result_fn))
         

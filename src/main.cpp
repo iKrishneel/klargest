@@ -1,11 +1,11 @@
+// Copyright (C) 2019 by Krishneel
 
 #include <klargest/parser_helper.hpp>
 #include <klargest/klargest.hpp>
 
-// temp hardcored
-std::string default_folder = "../tests/";
-std::string prefix = "test_";
-std::string default_name = "_result_k";
+std::string default_folder = DEFAULT_FOLDER;
+std::string prefix = PREFIX;
+std::string default_name = DEFAULT_NAME;
 
 void writeToTextfile(const VectorPairs vector_pair, const int k,
                      const int size) {
@@ -24,21 +24,15 @@ void writeToTextfile(const VectorPairs vector_pair, const int k,
 
 int main(int argc, const char *argv[]) {
 
+  // initialize parser to handle command line inputs
   ParserHelper *parser = new ParserHelper(argc, argv);
-  VectorPairs pairs = parser->getPairs();
+  // get the data provided by the user
+  auto pairs = parser->getPairs();
   
   // do not proceed if input is empty
   if (pairs.empty()) {
-    std::cout << "No input to process\n";
+    // std::cout << "No input to process\n";
     return EXIT_SUCCESS;
-  }
-
-  bool is_debug = false;
-  if (is_debug) {
-    for (auto it = pairs.begin(); it != pairs.end(); it++) {
-      std::cout << *it;
-    }
-    std::cout << "\n";
   }
 
   int k = parser->getK();
@@ -60,5 +54,6 @@ int main(int argc, const char *argv[]) {
   // book keeping
   delete parser;
   delete k_largest;
+  
   return EXIT_SUCCESS;
 }
