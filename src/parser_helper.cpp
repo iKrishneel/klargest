@@ -59,13 +59,13 @@ bool ParserHelper::isValidK(const std::string str) {
   try {
     this->k_ = std::stoi(str);
     if (this->k_ < 1 || this->k_ > static_cast<int>(this->pairs_.size())) {
-      std::string what = "K not in range of the number of elements\n";
+      std::string what = "X not in range of the number of elements\n";
       throw std::invalid_argument(what);
     }
     return true;
   } catch (std::invalid_argument const &error) {
     std::cout << "\033[031m" << error.what() <<
-        "Enter valid value for k: k>0 \033[0m\n";
+        "Enter valid value for x: x>0 \033[0m\n";
   }
   return false;
 }
@@ -77,7 +77,7 @@ bool ParserHelper::isValidK(const std::string str) {
 bool ParserHelper::getKFromCL(const std::string s) {
   std::string input = s;
   while (input.empty() || !this->isValidK(input)) {
-    std::cout << "Enter a value for k: [0 < k < " <<
+    std::cout << "Enter a value for X: [0 < X < " <<
         this->pairs_.size() + 1 << "] : ";
     // get the user input
     std::getline(std::cin >> std::ws, input);

@@ -39,14 +39,14 @@ int main(int argc, const char *argv[]) {
   VectorPairs k_largest_pairs;
   do {
      k = parser->getK();
-     std::cout << "\nResults for K=" << k << "\n";
+     std::cout << "\nResults for X=" << k << "\n";
      k_largest_pairs = k_largest->getKLargest(k);
      k_largest->print(k_largest_pairs);
 
      // write to file
      writeToTextfile(k_largest_pairs, k, pairs.size());
      
-     std::cout << "\n\nEnter K for another test or C(c) to end."  << "\n";
+     std::cout << "\n\nEnter X for another test or C(c) to end."  << "\n";
      std::cout << std::string(CMD_COUNT, '-') << std::endl;
   } while (parser->getKFromCL());
   

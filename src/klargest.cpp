@@ -17,7 +17,7 @@ VectorPairs KLargest::getKLargest(const int k) {
   
   // check that given k is within the range
   if (k < 1 || k > v_size) {
-    std::cout << "\033[031mInvalid value for k\033[0m"  << "\n";
+    std::cout << "\033[031mInvalid value for X\033[0m"  << "\n";
     return VectorPairs();
   }
 
