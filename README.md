@@ -103,9 +103,19 @@ It will terminate if there is a error i.e., when the results doesnt match
 	```bash
     $ python compare_results.py ../tests/test_00000010_result_k3.txt # result file
 	```
-    You only need to provide the result file and the `compare_result` script will automatically locate the `test_00000010_actual.txt` containing the actual result for comparision.
+    You only need to provide the result file and the `compare_result` script will automatically locate the `test_00000010_actual.txt` containing the actual result for comparison.
     
     Note that this scripts is only for data stored in the file. Please run (1) before (2)
+    
+    ##### Output of compare script
+    ```bash
+    Comparing:
+	Actual: tests/test_05000000_actual.txt
+	Result: tests/test_05000000_result_k400.txt
+	Loading actual results into memory. Please wait a moment...
+	Comparing data of size: 400
+	Files compared and both matches
+    ```
     
     
 ### Sample Output
