@@ -25,6 +25,7 @@ def compare(result_fn, actual_fn):
     for i, v in actual:
         actual_s[i] = v
 
+    print ('Comparing data of size: {}'.format(len(result)))
     # compare
     # since the result of the algorithm is not sorted, an if all values are same
     # then there is a chance that value with different id is selected.

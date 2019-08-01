@@ -12,7 +12,7 @@ def random_string(size=10, chars=string.digits):
     return ''.join(random.choice(chars) for _ in range(size))
 
 def generate(size):
-    val_size = random.randint(2, 1e6)
+    val_size = random.randint(2, 1e3)
     
     filename = 'test_' + str(size).zfill(8) + '.txt'
     result_fn = filename[:-4] + '_actual.txt'
@@ -56,7 +56,7 @@ def main(argv):
         gen_size = int(argv[1])
         generate(gen_size)
     except (IndexError, ValueError):
-        print ('Enter the size of data to be generate and k: eg. 5 2')
+        print ('Enter the size of data to be generate: eg. 5')
 
     return
 
