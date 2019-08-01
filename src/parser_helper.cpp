@@ -18,9 +18,13 @@ ParserHelper::ParserHelper(const int argc, const char** argv) {
     // check that input is a file with valid extension
     if (isFile(argv[1])) {
       // load the file
-      readDataFromFile(this->pairs_, argv[1]);
-      // user also provided the value for k
-      this->getKFromCL(argc == 3 ? argv[2] : "");
+       if (readDataFromFile(this->pairs_, argv[1])) {
+          // user also provided the value for k
+          this->getKFromCL(argc == 3 ? argv[2] : "");
+       } else {
+         std::cout << "\033[031mFile not read \033[0m\n";
+         std::exit(EXIT_FAILURE);
+       }
     }
   }
 }

@@ -35,6 +35,8 @@ VectorPairs KLargest::getKLargest(const int k) {
  * the idea is to use Median-of-Medians algorithm to find the k-th
  * largest element and then loop over the vector to find all elements
  * in the vector greater then k-th largest
+ * Run time: O(N + K) = 0(N)
+ * Memory: 0(N) + O(K)
  * @param k: the kth largest element to search
  */
 VectorPairs KLargest::getKLargestMoMedians(const int k) {
@@ -62,9 +64,9 @@ VectorPairs KLargest::getKLargestMoMedians(const int k) {
       k_largest_pairs.push_back(*it);
     }
 
-    // only pack k results.
+    // only pack first-k results.
     // when multiple values are same it will result in packing
-    // all into the vector
+    // all into the vector.
     if (static_cast<int>(k_largest_pairs.size()) == k) {
       break;
     }
@@ -76,6 +78,7 @@ VectorPairs KLargest::getKLargestMoMedians(const int k) {
  * function to find the k-largest using max-heap implemented using the
  * std::priority_queue. Once the heap is created, the top-k values are
  * popped from the top of the structure in (klogn).
+ * Run time = O(N + KLogN)
  * [for comparision only]
  */
 VectorPairs KLargest::getKLargestMHeap(const int k) {

@@ -14,7 +14,6 @@ void writeToTextfile(const VectorPairs vector_pair, const int k,
   std::string n = std::string(8-dlen.size(), '0') + dlen;
   std::string filename = default_folder + prefix + n + default_name +
       std::to_string(k) + ".txt";
-
   std::ofstream outfile(filename);
   for (auto it = vector_pair.begin(); it != vector_pair.end(); it++) {
     outfile << it->identifier << " " << it->value << "\n";

@@ -35,23 +35,29 @@ def compare(result_fn, actual_fn):
         if actual_s[idd] != value:
             print ("Not Same for ID: {} Excepted Value {} Got: {}".format(idd, actual_s[idd], value))
             is_same = False
-            
+
     if is_same:
         print ("Files compared and both matches")
+    else:
+        print ('failed')
+        import signal
+        os.kill(os.getppid(), signal.SIGTERM)
     
 def main(argv):
     try:
         result_fn = argv[1]
-        assert os.path.isfile(result_fn), 'Invalid file path'
-        
+        assert os.path.isfile(result_fn), 'Invalid file path ' + result_fn
+
         # get the actual sorted result filename
         name = result_fn.split(os.sep)[-1].split('_')[0:2]
         actual_fn = ''
         for n in name:
             actual_fn += (n + '_')
 
-        fname = result_fn.split(os.sep)[0]
-        actual_fn = os.path.join(fname, actual_fn + (actual_filename + '.txt'))
+        path = ''
+        for p in result_fn.split(os.sep)[0:-1]:
+            path += (p + '/')
+        actual_fn = os.path.join(path, actual_fn + (actual_filename + '.txt'))
         assert os.path.isfile(actual_fn), 'Actual result file name {} not found'.format(actual_fn)
         assert os.path.isfile(result_fn), 'File name {} not found'.format(result_fn)
 
